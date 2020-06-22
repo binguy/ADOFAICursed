@@ -14,15 +14,62 @@ namespace CursedStuffCandyH
         static void Main(string[] args)
         {
             Console.WriteLine("I would recommend to drag your adofai level here");
+            string tent = Console.ReadLine().Replace("\"", "");//Path to file
+            string[] DoctorH = File.ReadAllLines(tent); //Array of string in that file
+            StringBuilder sb = new StringBuilder(); //Main StringBuilder
+            string FileNameAdd = "CursedV2";
+            Console.WriteLine("Please choose what curse do you want to do with this level, \n1-Angled sections with extra beat, \n2-Twirls are missing, \n3-No swing charting, \n4-there's a twirl on every tile, \n5-there's no fun allowed, \n6-every time you go up or down it gets faster.");
+            bool checker = false;
+            while (!checker)
+            {
+                bool pizza = Int32.TryParse(Console.ReadLine(), out int number);
+                if (pizza)
+                {
+                    switch (number)
+                    {
+                        case 1:
+                            Console.WriteLine("Case 1!");
+                            sb = ExtraAngledBeatus(DoctorH);
+                            checker = true;
+                            FileNameAdd = "ExtraAngledBeatus";
+                            break;
+                        case 2:
+                            Console.WriteLine("Case 2!");
+                            sb = NoUTwirls(DoctorH);
+                            checker = true;
+                            FileNameAdd = "NoUTwirls";
+                            break;
+                        case 3:
+                            Console.WriteLine("Case 3!");
+                            sb = NoUSwings(DoctorH);
+                            FileNameAdd = "NoUSwings";
+                            checker = true;
+                            break;
+                        default:
+                            Console.WriteLine("Case default!");
+                            //Everything which not else
+                            checker = true;
+                            break;
+                    }
+
+                }
+                else
+                {
+                Console.WriteLine("Fuck you. Suffer with this endless loop of torture.");
+                }
+            }
+            using var sw = new StreamWriter(tent.Replace(".adofai", FileNameAdd) +".adofai");
+            sw.WriteLine(sb.ToString());
+            Console.WriteLine("\ndata written to file "+ tent.Replace(".adofai", FileNameAdd) + ".adofai");
+            Console.WriteLine("Press Any Key To Exit");
+            Console.ReadKey();
+        }
+        public static StringBuilder ExtraAngledBeatus(string[] DoctorH)
+        {
             string RandomJCI = ""; //Basically a Help variable
             string firestix = ""; //pathData in clear form
-            string tent = Console.ReadLine().Replace("\"", "");//Path to file
-            string[] DoctorH = System.IO.File.ReadAllLines(tent); //Array of string in that file
-            StringBuilder sb = new StringBuilder(); //Main StringBuilder
-            StringBuilder events = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             var kins = new List<int>();//List of int ofr moving actions
-            char[] alex;//list of chars of pathData
-            int[] actions = null;
             foreach (string oeufhd in DoctorH)
             {
                 if (oeufhd.Contains("pathData"))
@@ -40,7 +87,6 @@ namespace CursedStuffCandyH
                     char[] h = { 'U', 'R', 'D', 'L' };
                     int rhombus = 0;
                     kins.Add(rhombus);
-                    alex = firestix.ToArray();
                     foreach (char rikri in firestix)
                     {
 
@@ -65,14 +111,13 @@ namespace CursedStuffCandyH
                         Console.Write(kins[i].ToString() + " ");
                     }
                     sb.Append(CursedPathData + "\n");
-                    
+
                 }
-                else if(oeufhd.Contains("\"floor\""))
+                else if (oeufhd.Contains("\"floor\""))
                 {
                     Regex rx = new Regex("floor\": (.*?),");
                     int yeeter = Convert.ToInt32(rx.Match(oeufhd).Groups[1].Value);
-                    //actions.Append(yeeter);
-                    sb.Append($"{oeufhd.Replace($"\"floor\": {yeeter}", $"\"floor\": {yeeter+kins[yeeter+kins[yeeter]]}")}\n");
+                    sb.Append($"{oeufhd.Replace($"\"floor\": {yeeter}", $"\"floor\": {yeeter + kins[yeeter + kins[yeeter]]}")}\n");
                 }
                 else
                 {
@@ -80,12 +125,93 @@ namespace CursedStuffCandyH
                 }
 
             }
-
-            using var sw = new StreamWriter(tent.Replace(".adofai", "CursedV2")+".adofai");
-            sw.WriteLine(sb.ToString());
-            Console.WriteLine("\ndata written to file "+ tent.Replace(".adofai", "CursedV") + ".adofai");
-            Console.WriteLine("Press Any Key To Exit");
-            Console.ReadKey();
+            return sb;
+        }
+        public static StringBuilder NoUTwirls(string[] DoctorH)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(string line in DoctorH)
+            {
+                if (!line.Contains("\"Twirl\""))
+                {
+                    sb.Append(line+"\n");
+                }
+            }
+            return sb;
+        }
+        public static StringBuilder NoUSwings(string[] DoctorH)
+        {
+            char[] straight = { 'U', 'D' };
+            char[] swingright = { 'T', 'F' };
+            char[] swingleft = { 'G', 'B' };
+            string RandomJCI = ""; //Basically a Help variable
+            string firestix = ""; //pathData in clear form
+            StringBuilder sb = new StringBuilder();
+            foreach (string line in DoctorH)
+            {
+                if (line.Contains("pathData"))
+                {
+                    RandomJCI = line;
+                    RandomJCI = RandomJCI.Insert(0, "{");
+                    RandomJCI = RandomJCI.Insert(line.Length, "}");
+                    Curser m = JsonConvert.DeserializeObject<Curser>(RandomJCI);
+                    firestix = m.pathData;
+                    Console.WriteLine("What Swing do you want to choose? 1-/ , 2-\\ or 3-RANDOM SWING SIDE EVERY TILE");
+                    switch (Convert.ToInt32(Console.ReadLine()))
+                    {
+                        case 1:
+                            int he = 0;
+                            foreach(char h in straight)
+                            {
+                                firestix = firestix.Replace(h, swingright[he]);
+                                he++;
+                            }
+                            break;
+                        case 2:
+                            int hee = 0;
+                            foreach (char h in straight)
+                            {
+                                firestix = firestix.Replace(h, swingleft[hee]);
+                                hee++;
+                            }
+                            break;
+                        case 3:
+                            Console.WriteLine("RANDOM CASE HERE WE GO!");
+                            StringBuilder randum = new StringBuilder();
+                            Random bru = new Random();
+                            foreach(char letter in firestix)
+                            {
+                                if (straight.Contains(letter))
+                                {
+                                    char hletter = ' ';
+                                    switch (bru.Next(1, 2))
+                                    {
+                                        case 1:
+                                            hletter = letter;
+                                            randum.Append(swingleft[bru.Next(0, 2)]);
+                                            break;
+                                        case 2:
+                                            hletter = letter;
+                                            randum.Append(swingright[bru.Next(0, 2)]);
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    randum.Append(letter);
+                                }
+                            }
+                            firestix = randum.ToString();
+                            break;
+                    }
+                    sb.Append($"\"pathData\": \"{firestix}\",\n");
+                }
+                else
+                {
+                    sb.Append(line+"\n");
+                }
+            }
+            return sb;
         }
     }
     class Curser
