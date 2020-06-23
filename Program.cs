@@ -18,7 +18,7 @@ namespace CursedStuffCandyH
             string[] DoctorH = File.ReadAllLines(tent); //Array of string in that file
             StringBuilder sb = new StringBuilder(); //Main StringBuilder
             string FileNameAdd = "CursedV2";
-            Console.WriteLine("Please choose what curse do you want to do with this level, \n1-Angled sections with extra beat(DONE), \n2-Twirls are missing(DONE), \n3-Only swing charting(DONE), \n4-there's a twirl on every tile(NOT YET), \n5-there's no fun allowed(NOT YET), \n6-every time you go up or down it gets faster(NOT YET), \n7-No Swing Charting.(DONE)");
+            Console.WriteLine("Please choose what curse do you want to do with this level, \n1-Angled sections with extra beat(DONE, but needs rework), \n2-Twirls are missing(DONE), \n3-Only swing charting(DONE), \n4-there's a twirl on every tile(DONE), \n5-there's no fun allowed(NOT YET), \n6-every time you go up or down it gets faster(NOT YET), \n7-No Swing Charting.(DONE)");
             bool checker = false;
             while (!checker)
             {
@@ -43,6 +43,12 @@ namespace CursedStuffCandyH
                             Console.WriteLine("Case 3!");
                             sb = NoUSwings(DoctorH);
                             FileNameAdd = "NoUSwings";
+                            checker = true;
+                            break;
+                        case 4:
+                            Console.WriteLine("Case 4!");
+                            sb = CurseUTwirls(DoctorH);
+                            FileNameAdd = "CurseUTwirls";
                             checker = true;
                             break;
                         case 7:
@@ -90,7 +96,7 @@ namespace CursedStuffCandyH
                     Console.WriteLine(firestix);
                     StringBuilder bruj = new StringBuilder();
                     bruj.Append(cube);
-                    char[] h = { 'U', 'R', 'D', 'L' };
+                    char[] h = { 'U', 'R', 'D', 'L', '!' };
                     int rhombus = 0;
                     kins.Add(rhombus);
                     foreach (char rikri in firestix)
@@ -247,6 +253,60 @@ namespace CursedStuffCandyH
                 }
             }
 
+            return sb;
+        }
+        public static StringBuilder CurseUTwirls(string[] DoctorH)
+        {
+            string RandomJCI = ""; //Basically a Help variable
+            string firestix = ""; //pathData in clear form
+            StringBuilder twurls = new StringBuilder();
+            var InTwirls = new List<int>();
+            StringBuilder sb = new StringBuilder();
+            foreach (string line in DoctorH)
+            {
+                if (line.Contains("pathData"))
+                {
+                    RandomJCI = line;
+                    RandomJCI = RandomJCI.Insert(0, "{");
+                    RandomJCI = RandomJCI.Insert(line.Length, "}");
+                    Curser m = JsonConvert.DeserializeObject<Curser>(RandomJCI);
+                    firestix = m.pathData;
+                }
+                if (line.Contains("\"floor\""))
+                {
+                    if (line.Contains("\"Twirl\""))
+                    {
+                        Regex rx = new Regex("floor\": (.*?),");
+                        int yeeter = Convert.ToInt32(rx.Match(line).Groups[1].Value);
+                        InTwirls.Add(yeeter);
+                    }
+                }
+            }
+            for(int xeno =1; xeno<=firestix.Length; xeno++)
+            {
+                if (!InTwirls.Contains(xeno))
+                {
+                    twurls.Append("{ " + "\"floor\": " + xeno.ToString() + ", \"eventType\": \"Twirl\", " + "},\n");
+                }
+            }
+            bool twirlsAppended = false;
+            foreach(string linev2 in DoctorH)
+            {
+                if (linev2.Contains("pathData"))
+                {
+                    sb.Append($"\"pathData\": \"{firestix}\",\n");
+                }
+                else if (linev2.Contains("\"floor\":")&&!twirlsAppended)
+                {
+                    sb.Append(linev2 + "\n");
+                    sb.Append(twurls.ToString());
+                    twirlsAppended = true;
+                }
+                else
+                {
+                    sb.Append(linev2 + "\n");
+                }
+            }
             return sb;
         }
     }
