@@ -168,7 +168,8 @@ namespace CursedStuffCandyH
                     RandomJCI = RandomJCI.Insert(line.Length, "}");
                     Curser m = JsonConvert.DeserializeObject<Curser>(RandomJCI);
                     firestix = m.pathData;
-                    Console.WriteLine("What Swing do you want to choose? 1-/ , 2-\\ or 3-RANDOM SWING SIDE EVERY TILE");
+                    var IndexSwirls = new List<int>();
+                    Console.WriteLine("What Swing do you want to choose? 1-/ , 2-\\ , 3-RANDOM SWING SIDE EVERY TILE, 4-AutoTwirlSwing");
                     switch (Convert.ToInt32(Console.ReadLine()))
                     {
                         case 1:
@@ -214,6 +215,57 @@ namespace CursedStuffCandyH
                                 }
                             }
                             firestix = randum.ToString();
+                            break;
+                        case 4:
+                            Console.WriteLine("SMART SWING!");
+                            bool Twirled = false;
+                            int huehue = 0;
+                            foreach(string layne in DoctorH)
+                            {
+                                if (layne.Contains("Twirl"))
+                                {
+                                    RandomJCI = layne.Replace("},", "}");
+                                    Twirls Swirls = new Twirls();
+                                    Swirls = JsonConvert.DeserializeObject<Twirls>(RandomJCI);
+                                    IndexSwirls.Add(Swirls.floor);
+                                }
+                            }
+                            StringBuilder CursedFirestix = new StringBuilder(firestix);
+                            foreach(char letter in firestix)
+                            {
+                                if (straight.Contains(letter))
+                                {
+                                    if (!Twirled)
+                                    {
+                                        if (letter == 'U')
+                                        {
+                                            CursedFirestix[huehue] = swingright[0];
+                                        }
+                                        else if (letter == 'D')
+                                        {
+                                            CursedFirestix[huehue] = swingright[1];
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (letter == 'U')
+                                        {
+                                            CursedFirestix[huehue] = swingleft[0];
+                                        }
+                                        else if (letter == 'D')
+                                        {
+                                            CursedFirestix[huehue] = swingleft[1];
+                                        }
+                                    }
+                                    
+                                }
+                                huehue++;
+                                if (IndexSwirls.Contains(huehue))
+                                {
+                                    Twirled = !Twirled;
+                                }
+                            }
+                            firestix = CursedFirestix.ToString();
                             break;
                     }
                     sb.Append($"\"pathData\": \"{firestix}\",\n");
@@ -313,5 +365,10 @@ namespace CursedStuffCandyH
     class Curser
     {
         public string pathData { get; set; }
+    }
+    public class Twirls
+    {
+        public int floor { get; set; }
+        public string eventType { get; set; }
     }
 }
