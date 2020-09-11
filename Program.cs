@@ -18,7 +18,7 @@ namespace CursedStuffCandyH
             string[] DoctorH = File.ReadAllLines(tent); //Array of string in that file
             StringBuilder sb = new StringBuilder(); //Main StringBuilder
             string FileNameAdd = "CursedV2";
-            Console.WriteLine("Please choose what curse do you want to do with this level, \n1-Angled sections with extra beat(DONE, but needs rework), \n2-Twirls are missing(DONE), \n3-Only swing charting(DONE), \n4-there's a twirl on every tile(DONE), \n5-there's no fun allowed(NOT YET), \n6-every time you go up or down it gets faster(NOT YET), \n7-No Swing Charting.(DONE)");
+            Console.WriteLine("Please choose what curse do you want to do with this level, \n1-Angled sections with extra beat(DONE, but needs rework), \n2-Twirls are missing(DONE), \n3-Only swing charting(DONE), \n4-there's a twirl on every tile(DONE), \n5-there's no fun allowed(NOT YET), \n6-every time you go up or down it gets faster(NOT YET), \n7-No Swing Charting.(DONE), \n8-Drunk Version, \n9-Too much Midspins, 10-TNT Pseudos");
             bool checker = false;
             while (!checker)
             {
@@ -55,6 +55,12 @@ namespace CursedStuffCandyH
                             Console.WriteLine("Case 7!");
                             FileNameAdd = "NoUKSwings";
                             sb = NoUKSwings(DoctorH);
+                            checker = true;
+                            break;
+                        case 10:
+                            Console.WriteLine("Case 10! Just for Tent");
+                            FileNameAdd = "tentPseudos";
+                            sb = TentPseudos(DoctorH);
                             checker = true;
                             break;
                         default:
@@ -357,6 +363,35 @@ namespace CursedStuffCandyH
                 else
                 {
                     sb.Append(linev2 + "\n");
+                }
+            }
+            return sb;
+        }
+        public static StringBuilder TentPseudos(string[] DoctorH)
+        {
+            char[] pseudos = { 'J', 'N', 'H', 'M' };
+            char[] swung = { 'T', 'F', 'G', 'B' };
+            string RandomJCI = ""; //Basically a Help variable
+            string firestix = ""; //pathData in clear form
+            StringBuilder sb = new StringBuilder();
+            foreach (string line in DoctorH)
+            {
+                if (line.Contains("pathData"))
+                {
+                    RandomJCI = line;
+                    RandomJCI = RandomJCI.Insert(0, "{");
+                    RandomJCI = RandomJCI.Insert(line.Length, "}");
+                    Curser m = JsonConvert.DeserializeObject<Curser>(RandomJCI);
+                    firestix = m.pathData;
+                    foreach (char vacuum in swung)
+                    {
+                        firestix = firestix.Replace(vacuum, pseudos[Array.IndexOf(swung, vacuum)]);
+                    }
+                    sb.Append($"\"pathData\": \"{firestix}\",\n");
+                }
+                else
+                {
+                    sb.Append(line + "\n");
                 }
             }
             return sb;
